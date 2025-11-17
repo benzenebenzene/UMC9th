@@ -14,5 +14,4 @@ public enum GeneralSuccessCode implements BaseSuccessCode {
     private final HttpStatus status;
     private final String code;
     private final String message;
-
 }

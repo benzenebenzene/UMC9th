@@ -1,4 +1,4 @@
-package com.example.umc9th.domain.review.service;
+package com.example.umc9th.domain.review.service.query;
 
 import com.example.umc9th.domain.review.entity.QReview;
 import com.example.umc9th.domain.review.entity.Review;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class ReviewQueryService {
+public class ReviewQueryServiceImpl implements ReviewQueryService {
 
     private ReviewRepository reviewRepository;
 

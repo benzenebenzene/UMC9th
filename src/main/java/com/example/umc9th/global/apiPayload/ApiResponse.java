@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonPropertyOrder({"isSuccess", "code", "message", "result"})
@@ -26,6 +24,7 @@ public class ApiResponse<T> {
     @JsonProperty("result")
     private T result;
 
+    //성공 응답
     public static <T> ApiResponse<T> onSuccess(BaseSuccessCode successCode, T result) {
         return new ApiResponse<>(
                 true,
@@ -44,5 +43,4 @@ public class ApiResponse<T> {
                 result
         );
     }
-
 }
