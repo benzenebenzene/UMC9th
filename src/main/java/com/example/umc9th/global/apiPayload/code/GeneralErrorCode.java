@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum GeneralErrorCode implements BaseErrorCode {
 
-    BAD_REQUEST(HttpStatus.BAD_REQUEST, "COMMON400",
+    BAD_REQUEST(HttpStatus.BAD_REQUEST,
+            "COMMON400",
             "잘못된 요청입니다"),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED,
             "COMMON401",
@@ -22,7 +23,11 @@ public enum GeneralErrorCode implements BaseErrorCode {
     INTERNAL_SERVER_ERROR(
             HttpStatus.INTERNAL_SERVER_ERROR,
             "COMMON500",
-            "서버 내부 오류가 발생했습니다"),;
+            "서버 내부 오류가 발생했습니다"),
+    VALID_FAIL(
+            HttpStatus.BAD_REQUEST,
+            "VALID400_1",
+            "검증에 실패했습니다.");
 
     private final HttpStatus status;
     private final String code;
