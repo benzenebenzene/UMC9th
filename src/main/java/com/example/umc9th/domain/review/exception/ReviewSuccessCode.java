@@ -9,7 +9,12 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ReviewSuccessCode implements BaseSuccessCode {
 
-    REVIEW_RETRIEVED(HttpStatus.OK, "REVIEW_200", "Reviews retrieved successfully");
+    OK(HttpStatus.OK,
+            "REVIEW200",
+            "리뷰 정보를 성공적으로 조회했습니다."),
+    CREATED(HttpStatus.CREATED,
+            "REVIEW201",
+            "리뷰 정보를 성공적으로 생성했습니다.");
 
     private final HttpStatus status;
     private final String code;

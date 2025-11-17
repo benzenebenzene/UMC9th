@@ -8,17 +8,19 @@ import java.util.List;
 public class ReviewResDTO {
 
     @Builder
-    public record ReviewDTO(
+    public record ReviewResponseDTO(
             Long id,
-            Long memberId,
+            Long reviewId,
+            Long storeId,
             String storeName,
-            Float star,
+            Long star,
             String content
     ){}
 
     @Builder
     public record ReviewListDTO(
-            List<ReviewDTO> reviews,
+            List<ReviewResponseDTO> reviews,
             int totalCount
     ) {}
+
 }

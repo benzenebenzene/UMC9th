@@ -1,4 +1,4 @@
-package com.example.umc9th.domain.member.service.command;
+package com.example.umc9th.domain.member.service;
 
 import com.example.umc9th.domain.food.entity.Food;
 import com.example.umc9th.domain.food.entity.MemberFood;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MemberCommandServiceImpl implements MemberCommandService{
+public class MemberCommandService {
 
     private final MemberRepository memberRepository;
     private final MemberFoodRepository memberFoodRepository;
@@ -28,7 +28,6 @@ public class MemberCommandServiceImpl implements MemberCommandService{
 
 
     //회원가입
-    @Override
     @Transactional
     public MemberResDTO.JoinDTO signUp(
             MemberReqDTO.JoinDTO dto
