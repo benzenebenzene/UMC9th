@@ -8,6 +8,7 @@ import com.example.umc9th.domain.review.exception.code.ReviewSuccessCode;
 import com.example.umc9th.domain.review.service.ReviewCommandService;
 import com.example.umc9th.domain.review.service.ReviewQueryService;
 import com.example.umc9th.global.apiPayload.ApiResponse;
+import com.example.umc9th.global.validation.annotation.ValidPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -37,17 +38,25 @@ public class ReviewController {
         return ApiResponse.onSuccess(ReviewSuccessCode.FOUND, reviewListDTO);
     }
 
-    //나의 리뷰 조회
+    // 내가 작성한 리뷰 목록 조회 - 페이징 적용
+    @Operation(
+            summary = "내가 작성한 리뷰 목록 조회 API",
+            description = "로그인한 사용자가 작성한 리뷰를 10개씩 페이징하여 조회합니다."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "page 값이 1 미만인 경우 등 잘못된 요청")
+    })
+
+    // 내가 작성한 리뷰 목록 조회 - 페이징 적용
     @GetMapping("/reviews/my")
-    public ApiResponse<ReviewResDTO.ReviewListDTO> findMyReview(
+    public ApiResponse<ReviewResDTO.ReviewPreViewListDTO> findMyReview(
             @RequestParam Long memberId,
             @RequestParam(required = false) String storeName,
-            @RequestParam(required = false) Integer starRange
+            @RequestParam(required = false) Integer starRange,
+            @ValidPage @RequestParam Integer page
     ){
-
-        List<Review> reviews = reviewQueryService.findMyReviews(memberId, storeName, starRange);
-        ReviewResDTO.ReviewListDTO reviewListDTO = ReviewConverter.toReviewListDTO(reviews);
-        return ApiResponse.onSuccess(ReviewSuccessCode.FOUND, reviewListDTO);
+        return ApiResponse.onSuccess(ReviewSuccessCode.FOUND, reviewQueryService.findMyReviews(memberId, storeName, starRange, page));
     }
 
     //가게에 리뷰 추가

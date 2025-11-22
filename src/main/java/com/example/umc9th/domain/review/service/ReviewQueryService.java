@@ -49,10 +49,13 @@ public class ReviewQueryService {
         return reviewRepository.searchReview(builder);
     }
 
-    public List<Review> findMyReviews(Long memberId, String storeName, Integer starRange) {
+    public ReviewResDTO.ReviewPreViewListDTO findMyReviews(
+            Long memberId,
+            String storeName,
+            Integer starRange,
+            Integer page) {
 
         QReview review = QReview.review;
-
         BooleanBuilder builder = new BooleanBuilder();
 
         builder.and(review.member.id.eq(memberId));
@@ -67,7 +70,10 @@ public class ReviewQueryService {
             builder.and(review.star.goe(starRange).and(review.star.lt(starRange + 1.0)));
         }
 
-        return reviewRepository.findMyReviews(builder);
+        PageRequest pageRequest = PageRequest.of(page - 1, 10);
+        Page<Review> result = reviewRepository.findMyReviews(builder, pageRequest);
+
+        return ReviewConverter.toReviewPreviewListDTO(result);
     }
 
     // 검색 API
