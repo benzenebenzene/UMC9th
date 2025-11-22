@@ -1,6 +1,6 @@
-package com.example.umc9th.global.annotation;
+package com.example.umc9th.global.validation.annotation;
 
-import com.example.umc9th.global.validator.FoodExistValidator;
+import com.example.umc9th.global.validation.validator.FoodExistValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

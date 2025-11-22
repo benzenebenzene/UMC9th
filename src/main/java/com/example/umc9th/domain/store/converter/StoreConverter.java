@@ -18,7 +18,7 @@ public class StoreConverter {
     // DTO -> 엔티티
     public static Store toStore(Location location , StoreReqDTO.StoreRequestDTO dto) {
         return Store.builder()
-                .storeName(dto.storeName())
+                .name(dto.storeName())
                 .managerNumber(dto.managerNumber())
                 .location(location)
                 .build();

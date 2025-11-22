@@ -1,4 +1,4 @@
-package com.example.umc9th.domain.review.exception;
+package com.example.umc9th.domain.review.exception.code;
 
 import com.example.umc9th.global.apiPayload.code.BaseSuccessCode;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ReviewSuccessCode implements BaseSuccessCode {
 
-    OK(HttpStatus.OK,
+    FOUND(HttpStatus.OK,
             "REVIEW200",
             "리뷰 정보를 성공적으로 조회했습니다."),
     CREATED(HttpStatus.CREATED,
