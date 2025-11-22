@@ -1,6 +1,6 @@
 package com.example.umc9th.domain.mission.controller;
 
-import com.example.umc9th.domain.mission.dto.MissionResDTO;
+import com.example.umc9th.domain.mission.dto.res.MissionResDTO;
 import com.example.umc9th.domain.mission.exception.code.MissionSuccessCode;
 import com.example.umc9th.domain.mission.service.MissionQueryService;
 import com.example.umc9th.global.apiPayload.ApiResponse;
