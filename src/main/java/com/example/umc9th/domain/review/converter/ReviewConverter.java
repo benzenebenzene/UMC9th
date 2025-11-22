@@ -1,29 +1,41 @@
 package com.example.umc9th.domain.review.converter;
 
 
+import com.example.umc9th.domain.review.dto.req.ReviewReqDTO;
 import com.example.umc9th.domain.review.dto.res.ReviewResDTO;
 import com.example.umc9th.domain.review.entity.Review;
-import org.springframework.stereotype.Component;
+import com.example.umc9th.domain.store.entity.Store;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
 public class ReviewConverter {
 
-    public ReviewResDTO.ReviewDTO toReviewDTO(Review review) {
-        return ReviewResDTO.ReviewDTO.builder()
-                .id(review.getId())
-                .memberId(review.getId())
-                .storeName(review.getStore().getName())
+    public static ReviewResDTO.ReviewResponseDTO toReviewDTO(
+            Store store, Review review
+    ){
+        return ReviewResDTO.ReviewResponseDTO.builder()
+                .reviewId(review.getReviewId())
+                .storeName(review.getStore().getStoreName())
                 .star(review.getStar())
-                .content(review.getContent())
+                .content(review.getReviewContent())
+                .build();
+    }
+
+    public static Review toReview(
+            Store store,
+            ReviewReqDTO.ReviewRequestDTO dto
+    ){
+        return Review.builder()
+                .reviewContent(dto.content())
+                .star(dto.star())
+                .store(store)
                 .build();
     }
 
     public ReviewResDTO.ReviewListDTO toReviewListDTO(List<Review> reviews) {
-        List<ReviewResDTO.ReviewDTO> reviewDTOs = reviews.stream()
-                .map(this::toReviewDTO)
+        List<ReviewResDTO.ReviewResponseDTO> reviewDTOs = reviews.stream()
+                .map(review -> toReviewDTO(review.getStore(), review))
                 .collect(Collectors.toList());
 
         return ReviewResDTO.ReviewListDTO.builder()
@@ -31,5 +43,4 @@ public class ReviewConverter {
                 .totalCount(reviewDTOs.size())
                 .build();
     }
-
 }

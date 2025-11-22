@@ -19,7 +19,7 @@ public class Store extends BaseEntity {
     private Long id;
 
     @Column(name = "name", nullable = false)
-    private String name;
+    private String storeName;
 
     @Column(name = "manager_number", nullable = false)
     private Long managerNumber;

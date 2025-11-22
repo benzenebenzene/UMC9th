@@ -21,13 +21,13 @@ public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
-    private Long id;
+    private Long reviewId;
 
-    @Column(name = "content", nullable = false)
-    private String content;
+    @Column(name = "review_content", nullable = false)
+    private String reviewContent;
 
     @Column(name = "star", nullable = false)
-    private Float star;
+    private Long star;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
