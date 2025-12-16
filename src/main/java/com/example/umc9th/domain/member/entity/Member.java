@@ -3,6 +3,7 @@ package com.example.umc9th.domain.member.entity;
 import com.example.umc9th.domain.food.entity.MemberFood;
 import com.example.umc9th.domain.member.enums.Address;
 import com.example.umc9th.domain.member.enums.Gender;
+import com.example.umc9th.domain.member.enums.Role;
 import com.example.umc9th.domain.member.enums.SocialType;
 import com.example.umc9th.domain.term.entity.MemberTerm;
 import com.example.umc9th.domain.mission.entity.MemberMission;
@@ -29,6 +30,15 @@ public class Member extends BaseEntity {
 
     @Column(name = "name")
     private String name;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
