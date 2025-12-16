@@ -4,22 +4,26 @@ import com.example.umc9th.domain.review.converter.ReviewConverter;
 import com.example.umc9th.domain.review.dto.req.ReviewReqDTO;
 import com.example.umc9th.domain.review.dto.res.ReviewResDTO;
 import com.example.umc9th.domain.review.entity.Review;
-import com.example.umc9th.domain.review.exception.ReviewSuccessCode;
+import com.example.umc9th.domain.review.exception.code.ReviewSuccessCode;
 import com.example.umc9th.domain.review.service.ReviewCommandService;
 import com.example.umc9th.domain.review.service.ReviewQueryService;
 import com.example.umc9th.global.apiPayload.ApiResponse;
+import com.example.umc9th.global.validation.annotation.ValidPage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class ReviewController {
 
     private final ReviewQueryService reviewQueryService;
-    private final ReviewConverter reviewConverter;
     private final ReviewCommandService reviewCommandService;
 
     //리뷰 검색
@@ -30,21 +34,29 @@ public class ReviewController {
     ){
 
         List<Review> reviews = reviewQueryService.searchReview(query, type);
-        ReviewResDTO.ReviewListDTO reviewListDTO = reviewConverter.toReviewListDTO(reviews);
-        return ApiResponse.onSuccess(ReviewSuccessCode.OK, reviewListDTO);
+        ReviewResDTO.ReviewListDTO reviewListDTO = ReviewConverter.toReviewListDTO(reviews);
+        return ApiResponse.onSuccess(ReviewSuccessCode.FOUND, reviewListDTO);
     }
 
-    //나의 리뷰 조회
+    // 내가 작성한 리뷰 목록 조회 - 페이징 적용
+    @Operation(
+            summary = "내가 작성한 리뷰 목록 조회 API",
+            description = "로그인한 사용자가 작성한 리뷰를 10개씩 페이징하여 조회합니다."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "page 값이 1 미만인 경우 등 잘못된 요청")
+    })
+
+    // 내가 작성한 리뷰 목록 조회 - 페이징 적용
     @GetMapping("/reviews/my")
-    public ApiResponse<ReviewResDTO.ReviewListDTO> findMyReview(
+    public ApiResponse<ReviewResDTO.ReviewPreViewListDTO> findMyReview(
             @RequestParam Long memberId,
             @RequestParam(required = false) String storeName,
-            @RequestParam(required = false) Integer starRange
+            @RequestParam(required = false) Integer starRange,
+            @ValidPage @RequestParam Integer page
     ){
-
-        List<Review> reviews = reviewQueryService.findMyReviews(memberId, storeName, starRange);
-        ReviewResDTO.ReviewListDTO reviewListDTO = reviewConverter.toReviewListDTO(reviews);
-        return ApiResponse.onSuccess(ReviewSuccessCode.OK, reviewListDTO);
+        return ApiResponse.onSuccess(ReviewSuccessCode.FOUND, reviewQueryService.findMyReviews(memberId, storeName, starRange, page));
     }
 
     //가게에 리뷰 추가
@@ -54,5 +66,27 @@ public class ReviewController {
     ) {
 
         return ApiResponse.onSuccess(ReviewSuccessCode.CREATED, reviewCommandService.createReview(dto));
+    }
+
+
+    // 가게의 리뷰 목록 조회
+    @Operation(
+            summary = "가게의 리뷰 목록 조회 API By 벤젠 (개발 중)",
+            description = "특정 가게의 리뷰를 모두 조회합니다. 페이지네이션으로 제공합니다."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "실패")
+    })
+
+    // 가게의 리뷰 목록 조회
+    @GetMapping("/reviews")
+    public ApiResponse<ReviewResDTO.ReviewPreViewListDTO> getReviews(
+            @RequestParam String storeName,
+            @RequestParam(defaultValue = "1") Integer page
+    ){
+
+        ReviewSuccessCode code = ReviewSuccessCode.FOUND;
+        return ApiResponse.onSuccess(code, reviewQueryService.findReview(storeName, page));
     }
 }

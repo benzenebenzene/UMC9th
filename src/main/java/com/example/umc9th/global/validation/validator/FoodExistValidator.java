@@ -1,8 +1,8 @@
-package com.example.umc9th.global.validator;
+package com.example.umc9th.global.validation.validator;
 
 import com.example.umc9th.domain.food.exception.code.FoodErrorCode;
 import com.example.umc9th.domain.food.repository.FoodRepository;
-import com.example.umc9th.global.annotation.ExistFoods;
+import com.example.umc9th.global.validation.annotation.ExistFoods;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

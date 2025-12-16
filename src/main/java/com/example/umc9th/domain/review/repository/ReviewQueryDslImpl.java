@@ -7,6 +7,9 @@ import com.example.umc9th.domain.store.entity.QStore;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,15 +37,24 @@ public class ReviewQueryDslImpl implements ReviewQueryDsl{
     }
 
     @Override
-    public List<Review> findMyReviews(Predicate predicate) {
+    public Page<Review> findMyReviews(Predicate predicate, Pageable pageable) {
         QReview review = QReview.review;
         QStore store = QStore.store;
 
-        return queryFactory
+        List<Review> content = queryFactory
                 .selectFrom(review)
-                .leftJoin(review.store, store)
                 .where(predicate)
                 .orderBy(review.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        Long total = queryFactory
+                .select(review.count())
+                .from(review)
+                .where(predicate)
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total == null ? 0 : total);
     }
 }
