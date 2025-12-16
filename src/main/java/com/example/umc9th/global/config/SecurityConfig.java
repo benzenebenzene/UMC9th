@@ -1,18 +1,29 @@
 package com.example.umc9th.global.config;
 
+import com.example.umc9th.global.auth.AuthenticationEntryPointImpl;
+import com.example.umc9th.global.auth.CustomUserDetailsService;
+import com.example.umc9th.global.jwt.JwtAuthFilter;
+import com.example.umc9th.global.jwt.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService customUserDetailsService;
+
     private final String[] allowUrl = {
+            "/login",
             "/sign-up",
             "/swagger-ui/**",
             "/swagger-resources/**",
@@ -41,8 +52,18 @@ public class SecurityConfig {
     }
 
     @Bean
+    public JwtAuthFilter jwtAuthFilter() {
+        return new JwtAuthFilter(jwtUtil, customUserDetailsService);
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new AuthenticationEntryPointImpl();
     }
 
 }
