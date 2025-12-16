@@ -10,9 +10,11 @@ import com.example.umc9th.domain.member.converter.MemberConverter;
 import com.example.umc9th.domain.member.dto.req.MemberReqDTO;
 import com.example.umc9th.domain.member.dto.res.MemberResDTO;
 import com.example.umc9th.domain.member.entity.Member;
+import com.example.umc9th.domain.member.enums.Role;
 import com.example.umc9th.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,18 +24,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberCommandService {
 
+
+
     private final MemberRepository memberRepository;
     private final MemberFoodRepository memberFoodRepository;
     private final FoodRepository foodRepository;
-
+    // Password Encoder
+    private final PasswordEncoder passwordEncoder;
 
     //회원가입
     @Transactional
     public MemberResDTO.JoinDTO signUp(
             MemberReqDTO.JoinDTO dto
     ){
-        // 사용자 생성
-        Member member = MemberConverter.toMember(dto);
+        // 솔트된 비밀번호 생성
+        String salt = passwordEncoder.encode(dto.password());
+
+        // 사용자 생성: 유저 / 관리자는 따로 API 만들어서 관리
+        Member member = MemberConverter.toMember(dto, salt, Role.ROLE_USER);
         // DB 적용
         memberRepository.save(member);
 
